@@ -85,68 +85,69 @@ lastname = "Black";
 
 #### Особливості **var**
 
-- Змінна, яка була оголошена з використанням **var**, має глобальну або функціональну область видимості.
+##### 1. Змінна, яка була оголошена з використанням **var**, має глобальну або функціональну область видимості.
 
-    Змінна, оголошена поза блоком функції, є частиною глобальної області видимості. Тобто доступна в будь-якому місці коду.
+Змінна, оголошена поза блоком функції, є частиною глобальної області видимості. Тобто доступна в будь-якому місці коду.
 
-    **Example**
+**Example**
 
-    ```javascript
-    var number = 120;
-    console.log(number); 
+```javascript
+var number = 120;
+console.log(number); 
 
-    function printNumber() {
-        console.log(number);
-    }
-
-    printNumber();
-    ```
-
-    **Output**
-
-    ```
-    120
-    120
-    ```
-
-    Змінна, яка оголошена всередині функції, доступна в межах цієї функції. Навіть, якщо код виконується у вкладених блоках. Тобто **var** ігнорує блочну область, що властива конструкціям `if`, `for`, `while`.
-
-    **Example**
-
-    ```javascript
-    var number = 120; 
-
-    function printResult() {
-        if (number > 100) {
-            var message = `The number ${number} is greater than 100.`;
-        }
-        console.log(message); 
-    }
-
-    printResult();
-    ```
-
-    **Output**
-
-    ```
-    The number 120 is greater than 100.
-    ```
-
-- Змінні з **var** можна переоголосити в межах їхньої області й не отримати помилку. 
-
-    **Example**
-
-    ```javascript
-    var number = 10;
-    var number = 35;
-
+function printNumber() {
     console.log(number);
-    ```
-    **Output**
+}
 
-    ```
-    35
-    ```
+printNumber();
+```
+
+**Output**
+
+```
+120
+120
+```
+
+##### 2. Змінна, яка оголошена всередині функції, доступна в межах цієї функції. 
+Навіть, якщо код виконується у вкладених блоках. Тобто **var** ігнорує блочну область, що властива конструкціям `if`, `for`, `while`.
+
+**Example**
+
+```javascript
+var number = 120; 
+
+function printResult() {
+    if (number > 100) {
+        var message = `The number ${number} is greater than 100.`;
+    }
+    console.log(message); 
+}
+
+printResult();
+```
+
+**Output**
+
+```
+The number 120 is greater than 100.
+```
+
+Змінні з **var** можна переоголосити в межах їхньої області й не отримати помилку. 
+
+**Example**
+
+  ```javascript
+  var number = 10;
+  var number = 35;
+
+  console.log(number);
+  ```
+  **Output**
+
+  ```
+  35
+  ```
 
 ### Ключове слово **let**
 
