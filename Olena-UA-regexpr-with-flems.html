@@ -1,0 +1,1412 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>regular-expressions-js-flems2.md</title>
+  <style>
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      background-color: #1a1a1a;
+      border: none;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    /* CSS for syntax highlighting */
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <style>
+  <!--
+
+  /* RESET
+  =============================================================================*/
+
+  html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, 
+      abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, 
+      strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, 
+      legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, 
+      embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, 
+      section, summary, time, mark, audio, video {
+    margin: 0;
+    padding: 0;
+    border: 0;
+  }
+
+  /* BODY
+  =============================================================================*/
+
+  body {
+    font-family: Arimo, Nunito Sans, arial, clean, sans-serif;
+    font-size: 16px;
+    line-height: 1.5;  /* межстрочное */
+    color: #333;
+    background-color: #fff;
+    padding: 20px;
+    max-width: 40em; /* ширина текста */
+    margin: 0 auto;
+  }
+
+  body>*:first-child {
+    margin-top: 0 !important;
+  }
+
+  body>*:last-child {
+    margin-bottom: 0 !important;
+  }
+
+  /* BLOCKS
+  =============================================================================*/
+
+  p, blockquote, ul, ol, dl, table, pre {
+    margin: 0.4em 0; /* между абзацами (кроме первого и последнего) */
+  }
+
+  /* HEADERS
+  =============================================================================*/
+
+  h1, h2, h3, h4, h5, h6 {
+    margin: 20px 0 10px;
+    padding: 0;
+    font-family: "Segoe UI",Helvetica,Arial,sans-serif;
+    font-weight: bold;
+    -webkit-font-smoothing: antialiased;
+    text-shadow: 0px 0px 10px rgb(0 0 0 / 25%);
+  }
+
+  h1 tt, h1 code, h2 tt, h2 code, h3 tt, h3 code, h4 tt, h4 code, h5 tt, h5 code, h6 tt, h6 code {
+    font-size: 1em;
+  }
+
+  h1 {
+    font-size: 1.8em;
+    /*color: #000;*/
+  }
+
+  h2 {
+    font-size: 1.5em;
+    border-bottom: 1px solid #ccc;
+    /*color: #000;*/
+  }
+
+  h3 {
+    font-size: 1.3em;
+  }
+
+  h4 {
+    font-size: 1.1em;
+  }
+
+  h5 {
+    font-size: 1.1em;
+  }
+
+  h6 {
+    /*color: #777;*/
+    font-size: 1.0em;
+  }
+
+  body>h2:first-child, body>h1:first-child, body>h1:first-child+h2, body>h3:first-child, body>h4:first-child, body>h5:first-child, body>h6:first-child {
+    margin-top: 0;
+    padding-top: 0;
+  }
+
+  a:first-child h1, a:first-child h2, a:first-child h3, a:first-child h4, a:first-child h5, a:first-child h6 {
+    margin-top: 0;
+    padding-top: 0;
+  }
+
+  h1+p, h2+p, h3+p, h4+p, h5+p, h6+p {
+    margin-top: 10px;
+  }
+
+  /* LINKS
+  =============================================================================*/
+
+  a {
+    color: #4183C4;
+    text-decoration: none;
+  }
+
+  a:hover {
+    text-decoration: underline;
+  }
+
+  /* LISTS
+  =============================================================================*/
+
+  ul, ol {
+    padding-left: 30px;
+  }
+
+  ul li > :first-child, 
+  ol li > :first-child, 
+  ul li ul:first-of-type, 
+  ol li ol:first-of-type, 
+  ul li ol:first-of-type, 
+  ol li ul:first-of-type {
+    margin-top: 0px;
+  }
+
+  ul ul, ul ol, ol ol, ol ul {
+    margin-bottom: 0;
+  }
+
+  dl {
+    padding: 0;
+  }
+
+  dl dt {
+    font-size: 14px;
+    font-weight: bold;
+    font-style: italic;
+    padding: 0;
+    margin: 15px 0 5px;
+  }
+
+  dl dt:first-child {
+    padding: 0;
+  }
+
+  dl dt>:first-child {
+    margin-top: 0px;
+  }
+
+  dl dt>:last-child {
+    margin-bottom: 0px;
+  }
+
+  dl dd {
+    margin: 0 0 15px;
+    padding: 0 15px;
+  }
+
+  dl dd>:first-child {
+    margin-top: 0px;
+  }
+
+  dl dd>:last-child {
+    margin-bottom: 0px;
+  }
+
+  /* CODE
+  =============================================================================*/
+
+  pre, code, tt {
+    font-size: 1rem;
+    font-family: Iosevka, Consolas, "Liberation Mono", Courier, monospace;
+  }
+
+  code, tt {
+    margin: 0 0px;
+    padding: 1px 3px;
+    white-space: nowrap;
+    border: 1px solid #eaeaea;
+  /*   background-color: #f8f8f8; это `code` */
+    background-color: #EFFFEF;
+    border-radius: 3px;
+  }
+
+  pre>code {
+    margin: 0;
+    padding: 0;
+    white-space: pre;
+    border: none;
+    background: transparent; 
+  }
+
+  .sourceCode{
+    background-color: #F6FFF7; /* светло-зелен для блоков кода */
+    font-size: 100%;
+  }
+    div.sourceCode{
+       box-shadow: 0px 0px 15px rgb(0 0 0 / 7%);
+    }
+
+  pre {
+  /*   background-color: #f8f8f8; это ``` */
+    border: 1px solid #ccc;
+    font-size: 14px;
+    line-height: 19px;
+    overflow: auto;
+    padding: 6px 8px;
+    border-radius: 3px;
+  }
+
+  pre code, pre tt {
+    background-color: transparent; 
+    border: none;
+  }
+
+  kbd {
+      -moz-border-bottom-colors: none;
+      -moz-border-left-colors: none;
+      -moz-border-right-colors: none;
+      -moz-border-top-colors: none;
+      background-color: #DDDDDD;
+      background-image: linear-gradient(#F1F1F1, #DDDDDD);
+      background-repeat: repeat-x;
+      border-color: #DDDDDD #CCCCCC #CCCCCC #DDDDDD;
+      border-image: none;
+      border-radius: 2px 2px 2px 2px;
+      border-style: solid;
+      border-width: 1px;
+      font-family: Iosevka, Helvetica, Arial, sans-serif;
+      line-height: 10px;
+      padding: 1px 4px;
+      box-shadow: 0 1px 0 rgba(63,63,63,0.25);
+  }
+
+  /* QUOTES
+  =============================================================================*/
+
+  blockquote {
+    border-left: 4px solid #DDD;
+    padding: 0 15px;
+    color: #777;
+  }
+
+  blockquote>:first-child {
+    margin-top: 0px;
+  }
+
+  blockquote>:last-child {
+    margin-bottom: 0px;
+  }
+
+  /* HORIZONTAL RULES
+  =============================================================================*/
+
+  hr {
+    clear: both;
+    margin: 15px 0;
+    height: 0px;
+    overflow: hidden;
+    border: none;
+    background: transparent;
+    border-bottom: 2px dotted #777;
+    padding: 0;
+  }
+
+  /* TABLES
+  =============================================================================*/
+
+    table {                                     
+       box-shadow: 0px 0px 15px rgb(0 0 0 / 15%);
+       display: inline-block;
+       width: auto;
+    }
+
+  table th {
+    font-weight: bold;
+  }
+
+  table th, table td {
+    border: 1px solid #ccc;
+    padding: 6px 13px;
+    font-size: 1rem;
+  }
+
+  table tr {
+    border-top: 1px solid #ccc;
+    background-color: #fff;
+  }
+
+  table tr:nth-child(2n) {
+    background-color: #f8f8f8;
+  }
+
+  /* IMAGES
+  =============================================================================*/
+
+  img {
+    max-width: 100%
+  }
+
+    .footnote-back, .footnote-ref {
+      color: #4493f8 !important; /* blue */
+    }
+    .footnote-ref, .footnote-ref::after {
+      font-size: 0.95em;
+      font-weight: 700;
+      vertical-align: super; 
+    }
+    .footnote-ref::after {
+      content:")";
+    }
+    .footnotes-end-of-document  {
+      font-size: 0.85em;  
+    }
+
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 1.5em;
+      margin: 0 0.8em 0.2em -1.8em;
+      vertical-align: middle;
+    }
+
+    .note, .tip, .warning { 
+      border-left-style: solid;
+      border-left-width: 3px;
+      padding-left: 7px;
+    }
+    div.title {
+      font-size: 0.85em;
+      font-weight: bold;
+    }
+    div.title > p::before{
+       content: '#';
+       width: 1em; 
+       height: 1em; 
+       display: inline-block; 
+    }
+
+
+
+    .note > .title {
+       color: #4493f8; /* blue */
+    }   
+    .tip > .title {
+       color: #3fb950; /* green */
+    }
+    .warning > .title {
+       color: #d29922 /* olive */;
+    }
+    .note  {
+       border-color: #4493f8; /* blue */
+    }
+    .tip  {
+       border-color: #3fb950; /* green */ 
+    }
+    .warning {
+       border-color: #d29922 /* olive */; 
+    }
+
+
+  #TOC {
+     font-family: Opinion Pro;
+     font-weight: bold;
+     font-size: 0.9em;
+     padding-left: 1em;
+     padding: .2em 0 .2em 1.0em;
+     background: #f7f7f7;
+     border: dashed 1px rgb(128,128,128); /* grey */
+     box-shadow: 0px 0px 0.8em rgb(0 0 0 / 25%);
+  }
+
+    figure {
+      margin: 0.3em 0 0.9em;
+      background-color: #eee;
+  /*  text-align: center; */
+      box-shadow: 0px 0px 0.8em rgb(0 0 0 / 25%);
+      border: dashed 1px rgb(128,128,128); /* grey */
+    }
+
+    figcaption {
+      font-family: Iosevka, Bitter;
+      font-style: italic;
+      font-size: 95%;
+      background-color: #eee;
+      color: #000;
+      padding: 0em 1em .2em;
+      margin: 0;
+    }
+
+    figure:hover{
+      background: #fff;
+    }
+
+    figure:hover figcaption {
+      background: #fff;
+    }
+
+
+  -->
+  </style>
+</head>
+<body>
+<h1 id="регулярні-вирази-javascript">Регулярні вирази JavaScript</h1>
+
+<p>Регулярні вирази JavaScript — це потужний інструмент для роботи з
+текстом, що дозволяє шукати, перевіряти, витягувати і змінювати рядки за
+заданими шаблонами. Вони часто використовуються для таких завдань, як
+валідація даних (наприклад, перевірка адрес електронної пошти або
+номерів телефонів), пошук і заміна фрагментів тексту, а також отримання
+інформації, що відповідає певним критеріям (наприклад, дати, ключові
+слова).</p>
+<p>Використання регулярних виразів допомагає скоротити код та спростити
+обробку тексту.</p>
+<p>У JavaScript регулярні вирази реалізовані окремим об'єктом
+<code>RegExp</code> і інтегровані в методи роботи з рядками.</p>
+<h2 id="способи-створення-регулярних-виразів">Способи створення
+регулярних виразів</h2>
+<p><strong>Регулярний вираз</strong> — це послідовність символів, яка
+визначає правила пошуку. Він складається з шаблону та необов’язкових
+модифікаторів.</p>
+<p>Без модифікаторів і спеціальних символів, які ми розглянемо пізніше,
+пошук за регулярним виразом аналогічний пошуку підрядка.</p>
+<p>У JavaScript є два основні способи створення регулярних виразів:</p>
+<ul>
+<li>Літеральна нотація (за допомогою слешів)</li>
+</ul>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ss">/pattern/modifiers</span><span class="op">;</span> <span class="co">// синтаксис</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span> regex1 <span class="op">=</span> <span class="ss">/hello/</span><span class="op">;</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span> regex2 <span class="op">=</span> <span class="ss">/</span><span class="sc">[a-z]</span><span class="ss">/gi</span><span class="op">;</span></span></code></pre></div>
+<ul>
+<li>Конструктор <code>RegExp</code></li>
+</ul>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span> regex1 <span class="op">=</span> <span class="kw">new</span> <span class="bu">RegExp</span>(<span class="st">&quot;hello&quot;</span>)<span class="op">;</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span> regex3 <span class="op">=</span> <span class="kw">new</span> <span class="bu">RegExp</span>(<span class="st">&quot;[a-z]&quot;</span><span class="op">,</span> <span class="st">&quot;gi&quot;</span>)<span class="op">;</span></span></code></pre></div>
+<p>Літеральну нотацію зручно використовувати, коли шаблон відомий
+заздалегідь і не змінюється — а це більшість ситуацій. Слеші
+<code>/.../</code> повідомляють JavaScript, що це регулярний вираз. Вони
+виконують таку ж роль, як лапки для рядків.</p>
+<p>Конструктор <code>RegExp</code> дозволяє створювати регулярні вирази
+динамічно, «на льоту», наприклад, коли шаблон чи модифікатори задає
+користувач.</p>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span> tag <span class="op">=</span> <span class="fu">prompt</span>(<span class="st">&quot;Який тег ви хочете знайти?&quot;</span><span class="op">,</span> <span class="st">&quot;h2&quot;</span>)<span class="op">;</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span> regexp <span class="op">=</span> <span class="kw">new</span> <span class="bu">RegExp</span>(<span class="vs">`&lt;</span><span class="sc">${</span>tag<span class="sc">}</span><span class="vs">&gt;`</span>)<span class="op">;</span></span></code></pre></div>
+<p>Якщо користувач відповість на prompt рядком "h2", то вийде регулярний
+вираз <code>/&lt;h2&gt;/</code>.</p>
+<h2 id="модифікатори-регулярних-виразів">Модифікатори регулярних
+виразів</h2>
+<p>Регулярні вирази можуть мати модифікатори, які змінюють поведінку
+виразу чи надають додаткову інформацію.</p>
+<table>
+<colgroup>
+<col style="width: 6%" />
+<col style="width: 93%" />
+</colgroup>
+<thead>
+<tr>
+<th>Модифікатор</th>
+<th>Опис</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>i</strong></td>
+<td>Виконує пошук без врахування регістру: немає різниці між
+<code>A</code> та <code>a</code>.</td>
+</tr>
+<tr>
+<td><strong>g</strong></td>
+<td>Шукає всі збіги, а не лише перший (глобальний пошук).</td>
+</tr>
+<tr>
+<td><strong>m</strong></td>
+<td>Вмикає багаторядковий режим (multiline).</td>
+</tr>
+<tr>
+<td><strong>y</strong></td>
+<td>Шукає лише з певної позиції (sticky).</td>
+</tr>
+<tr>
+<td><strong>u</strong></td>
+<td>Вмикає повну підтримку Unicode. Забезпечує правильну обробку
+сурогатних пар.</td>
+</tr>
+<tr>
+<td><strong>s</strong></td>
+<td>Дозволяє крапці (<code>.</code>) відповідати символу нового рядка
+(режим dotall).</td>
+</tr>
+<tr>
+<td><strong>d</strong></td>
+<td>Дозволяє отримувати інформацію про позиції збігів у рядку (новинка в
+ES2022). Додає властивість-масив <strong>indices</strong> до результату
+з індексами початку і кінця підрядків.</td>
+</tr>
+</tbody>
+</table>
+<p>Модифікатори можна вказувати двома способами:</p>
+<ul>
+<li>Після закриваючого слешу: <code>/pattern/flags</code>.</li>
+<li>У конструкторі <strong>RegExp</strong>:</li>
+</ul>
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Обидва варіанти еквівалентні</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span> regex1 <span class="op">=</span> <span class="ss">/hello/gi</span><span class="op">;</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span> regex2 <span class="op">=</span> <span class="kw">new</span> <span class="bu">RegExp</span>(<span class="st">&quot;hello&quot;</span><span class="op">,</span> <span class="st">&quot;gi&quot;</span>)<span class="op">;</span></span></code></pre></div>
+<p>Модифікатори можна комбінувати:</p>
+<pre><code class=language-js>let text = "Hello HELLO hello";
+console.log(text.match(/hello/gi)); // ['Hello', 'HELLO', 'hello']
+</code></pre>
+<p><strong>Приклади</strong></p>
+<pre><code class=language-js>console.log(/hello/.test('HELLO')); // false
+console.log(/hello/i.test('HELLO')); // true
+</code></pre>
+<pre><code class=language-js>console.log('hello hello'.match(/hello/)); // 'hello'
+console.log('hello hello'.match(/hello/g)); // ['hello', 'hello']
+</code></pre>
+<pre><code class=language-js>console.log('line1\nline2'.match(/^line/g)); // [ 'line' ]
+console.log('line1\nline2'.match(/^line/gm)); // ['line', 'line']
+</code></pre>
+<pre><code class=language-js>let multiline = `First line
+Second line
+Third line`;
+
+// ^ и $ тепер працюють для кожного рядка
+console.log(multiline.match(/^Second/));  // null
+console.log(multiline.match(/^Second/m)); // ['Second']
+</code></pre>
+<pre><code class=language-js>let regex = /\d/y;
+regex.lastIndex = 1;
+console.log('a1b2'.match(regex)); // ['1']
+
+regex.lastIndex = 3;
+console.log('a1b2'.match(regex)); // '2'
+</code></pre>
+<pre><code class=language-js>console.log(/\u{1F600}/u.test('😀')); // true
+console.log(/^.$/u.test('😀')); // true
+</code></pre>
+<pre><code class=language-js>let str = "Hello World";
+let regexp = /World/d;
+let result = regexp.exec(str);
+
+console.log(result.indices[0]); // [6, 11]
+</code></pre>
+<p>Output: 6 - початкова позиція збігу, 11 - кінцева позиція збігу.</p>
+<p>Модифікатор <code>d</code> корисний, коли потрібно:</p>
+<ul>
+<li>Визначати точне положення збігів у тексті</li>
+<li>Підсвічувати знайдений текст</li>
+<li>Створювати парсери</li>
+</ul>
+<p>Важливо знати:</p>
+<p>Модифікатори можуть суттєво впливати на продуктивність регулярних
+виразів, особливо під час роботи з великими текстами.</p>
+<h2 id="набори-та-діапазони">Набори та діапазони</h2>
+<p>Кілька символів або символьних класів у квадратних дужках
+<code>[…]</code> означають «шукати будь-який символ із заданих».</p>
+<p>Наприклад, <code>[eao]</code> означає будь-який із трьох символів:
+'a', 'e' або 'o'. Це називається <em>набором</em>.</p>
+<p>Зверніть увагу, що в наборі кілька символів, але в результаті він
+відповідає рівно одному символу.</p>
+<p>У квадратних дужках можна вказувати <em>діапазони</em>, наприклад,
+<code>[a-z]</code> відповідає символу в діапазоні від a до z, або
+<code>[0-5]</code> — цифра від 0 до 5.</p>
+<p>У <code>[0-9A-F]</code> одразу два діапазони: шукається символ, який
+або цифра від 0 до 9, або літера від A до F.</p>
+<p>Якщо ми хочемо знайти літери як у верхньому, так і в нижньому
+регістрі, то можемо додати діапазон: <code>[0-9A-Fa-f]</code>. Або
+встановити у регулярному виразі модифікатор <code>i</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Вираз</th>
+<th>Опис</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>[abc]</code></td>
+<td>Знайти будь-який із символів у дужках</td>
+</tr>
+<tr>
+<td><code>[^abc]</code></td>
+<td>Знайти будь-який символ, крім вказаних у дужках</td>
+</tr>
+<tr>
+<td><code>[0-9]</code></td>
+<td>Знайти будь-яку цифру у дужках від 0 до 9</td>
+</tr>
+<tr>
+<td><code>(x\|y)</code></td>
+<td>Знайти будь-яку з альтернатив, розділених знаком
+<code>\|</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="метасимволи-або-символьні-класи">Метасимволи або символьні
+класи</h2>
+<p>Символьні класи - це лише скорочення для наборів символів.</p>
+<table>
+<colgroup>
+<col style="width: 4%" />
+<col style="width: 15%" />
+<col style="width: 80%" />
+</colgroup>
+<thead>
+<tr>
+<th>Клас</th>
+<th>Еквівалент</th>
+<th>Опис</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>\d</code></td>
+<td><code>[0-9]</code></td>
+<td>цифра від 0 до 9</td>
+</tr>
+<tr>
+<td><code>\w</code></td>
+<td><code>[a-zA-Z0-9_]</code></td>
+<td>символ слова</td>
+</tr>
+<tr>
+<td><code>\s</code></td>
+<td><code>[ \t\n\v\f\r]</code></td>
+<td>пробільний символ, плюс кілька рідкісних символів пробілів
+Юнікоду</td>
+</tr>
+<tr>
+<td><code>\D</code></td>
+<td><code>[^\d]</code></td>
+<td>будь-який символ, крім цифри</td>
+</tr>
+<tr>
+<td><code>\W</code></td>
+<td><code>[^\w]</code></td>
+<td>будь-який символ, крім <code>\w</code>, тобто не літери та не цифри
+та не знак підкреслення</td>
+</tr>
+<tr>
+<td><code>\S</code></td>
+<td><code>[^\s]</code></td>
+<td>будь-який непробільний символ</td>
+</tr>
+</tbody>
+</table>
+<p>Для прикладу, <code>\d\s\w</code> позначає цифру, за якою йде символ
+пробілу, а потім символ слова, наприклад <code>1 a</code>.</p>
+<p>Знайдемо першу цифру в номері телефону:</p>
+<pre><code class=language-js>let str = "+1(900)-123-45-67";
+let regexp = /\d/;
+
+console.log(str.match(regexp)); // 1
+</code></pre>
+<p>Давайте додамо модифікатор <code>g</code>, щоб знайти всі цифри:</p>
+<pre><code class=language-js>let str = "+1(900)-123-45-67";
+let regexp = /\d/g;
+
+console.log(str.match(regexp));
+// масив збігів: 1,9,0,0,1,2,3,4,5,6,7
+
+// можна зробити з них чисто цифровий номер телефону
+console.log(str.match(regexp).join('') ); // 19001234567
+</code></pre>
+<p>Альтернативний, більш короткий шлях - знайти нецифрові символи
+<code>\D</code> і видалити їх з рядка:</p>
+<pre><code class=language-js>let str = "+1(900)-123-45-67";
+console.log(str.replace(/\D/g, "")); // 19001234567</code></pre>
+<p>Важливо знати:</p>
+<p>Всередині наборів символів метасимвол <code>'|'</code> сприймається
+як типовий знак. Наприклад, <code>[bak|bok|buk]</code> означає рівно те
+саме, що і <code>[baouk|]</code>.</p>
+<p>Регулярний вираз може містити як звичайні символи, і символьні
+класи.</p>
+<h2 id="крапка---це-будь-який-символ">Крапка - це будь-який символ</h2>
+<p>Крапка <code>.</code> - це спеціальний символьний клас, який
+відповідає "будь-якому символу, крім нового рядка".</p>
+<p>Зверніть увагу, що крапка означає будь-який символ, але не
+відсутність символу.</p>
+<h2 id="межа-слова">Межа слова</h2>
+<p>Є три види позицій, які є межами слова:</p>
+<ul>
+<li>Початок тексту, якщо його перший символ <code>\w</code>.</li>
+<li>Позиція всередині тексту, якщо ліворуч знаходиться <code>\w</code>,
+а праворуч — не <code>\w</code>, або навпаки.</li>
+<li>Кінець тексту, якщо його останній символ <code>\w</code>.</li>
+</ul>
+<p>Наприклад, регулярний вираз <code>\bJava\b</code> буде знайдено у
+рядку <code>Hello, Java!</code>, де <code>Java</code> — окреме слово,
+але не буде знайдено у рядку <code>Hello, JavaScript!</code>.</p>
+<p>Ми можемо використовувати <code>\b</code> не тільки зі словами, але й
+із цифрами.</p>
+<p>Наприклад, регулярний вираз <code>\b\d\d\b</code> шукає окремо
+розташовані числа. Іншими словами, він вимагає, щоб і до і після
+<code>\d\d</code> були символи, відмінні від <code>\w</code>, такі як
+пробіли або пунктуація (або початок/кінець тексту).</p>
+<p><strong>Приклад</strong></p>
+<pre><code class=language-js>console.log("1 23 456 78".match(/\b\d\d\b/g)); // [ '23', '78' ]
+console.log("12,34,56".match(/\b\d\d\b/g)); // [ '12', '34', '56' ]
+</code></pre>
+<p>Можна думати про <code>\b</code> як про символ нульової ширини,
+вставлений автоматично в потрібних місцях. При цьому у результаті їх не
+видно (вони ж нульової ширини), хоча відповідність шаблону є.</p>
+<h2 id="якоря-початок-та-кінець-рядка">Якоря: початок та кінець
+рядка</h2>
+<p>Символи <code>^</code> та <code>$</code> мають спеціальні значення в
+регулярних виразах. Вони називаються «якорі» (anchors).</p>
+<p><code>^</code> означає збіг з початком тексту, а <code>$</code> — з
+кінцем.</p>
+<table>
+<thead>
+<tr>
+<th>Модифікатор</th>
+<th>Опис</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>^m</code></td>
+<td>Знайти будь-які рядки, які містять m на початку</td>
+</tr>
+<tr>
+<td><code>m$</code></td>
+<td>Знайти будь-які рядки, які містять m наприкінці</td>
+</tr>
+</tbody>
+</table>
+<p>Давайте перевіримо чи починається текст з Mary:</p>
+<pre><code class=language-js>let str1 = "Mary had a little kitten";
+console.log(/^Mary/.test(str1)); // true</code></pre>
+<p>Шаблон <code>^Mary</code> означає: «початок рядка, потім Mary».</p>
+<p>Аналогічно можна перевірити, чи закінчується рядок словом fluffy:</p>
+<pre><code class=language-js>let str1 = "The kitten was fluffy";
+console.log(/fluffy$/.test(str1)); // true
+</code></pre>
+<p>Перевіримо, що рядок є часом у форматі <code>12:34</code>, тобто дві
+цифри, потім двокрапка, потім ще дві цифри.</p>
+<pre><code class=language-js>let goodInput = "12:34";
+let badInput = "12:345";
+
+let regexp = /^\d\d:\d\d$/;
+console.log(regexp.test(goodInput)); // true
+console.log(regexp.test(badInput)); // false
+</code></pre>
+<p>Зверніть увагу: символ <code>^</code> після квадратної дужки має
+інший сенс - це ознака початку негативного набору (negative set).</p>
+<p>Важливо знати:</p>
+<p>Поведінка якорів змінюється, якщо присутній модифікатор
+<code>m</code>.</p>
+<h2 id="квантифікатори">Квантифікатори</h2>
+<p>Квантифікатори дозволяють задати кількість повторень:</p>
+<table>
+<colgroup>
+<col style="width: 12%" />
+<col style="width: 87%" />
+</colgroup>
+<thead>
+<tr>
+<th>Quantifier</th>
+<th>Опис</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>m{X}</code></td>
+<td>Знайти будь-які рядки, що містять послідовність m, X разів</td>
+</tr>
+<tr>
+<td><code>m{X, Y}</code></td>
+<td>Знайти будь-які рядки, що містять послідовність m, від X до Y
+разів</td>
+</tr>
+<tr>
+<td><code>m{X,}</code></td>
+<td>Знайти будь-які рядки, що містять послідовність m як мінімум X
+разів</td>
+</tr>
+</tbody>
+</table>
+<p>Найпростіший квантифікатор — це число у фігурних дужках:
+<code>{n}</code>. Він додається до символу (або символьного класу, або
+набору) і вказує скільки символів або наборів нам потрібно.</p>
+<p>Шаблон <code>\d{5}</code> позначає рівно 5 цифр, він еквівалентний
+<code>\d\d\d\d\d</code>.</p>
+<p>Наступний приклад знаходить п'ятизначне число:</p>
+<pre><code class=language-js>console.log("I'm 12345 years old".match(/\d{5}/)); // "12345"
+</code></pre>
+<p>Ми можемо додати <code>\b</code>, щоб виключити числа довші:
+<code>\b\d{5}\b</code>.</p>
+<p>Для того, щоб знайти числа від 3 до 5 цифр, ми можемо вказати межі у
+фігурних дужках: <code>\d{3,5}</code></p>
+<p>Для найбільш затребуваних квантифікаторів є скорочені форми
+запису:</p>
+<table>
+<colgroup>
+<col style="width: 9%" />
+<col style="width: 90%" />
+</colgroup>
+<thead>
+<tr>
+<th>Квантифікатор</th>
+<th>Опис</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>n+</code></td>
+<td>Означає «один або більше». Те саме, що й <code>{1,}</code></td>
+</tr>
+<tr>
+<td><code>n?</code></td>
+<td>Означає «нуль або один». Те саме, що й <code>{0,1}</code>. По суті
+робить символ необов'язковим</td>
+</tr>
+<tr>
+<td><code>n*</code></td>
+<td>Означає «нуль або більше». Те саме, що й <code>{0,}</code>. Тобто
+символ може повторюватися багато разів або взагалі бути відсутнім</td>
+</tr>
+</tbody>
+</table>
+<p>Квантифікатори використовуються дуже часто. Вони є основними
+«будівельними блоками» складних регулярних виразів.</p>
+<h2 id="методи-рядків">Методи рядків</h2>
+<p>Як мовилося раніше, використання регулярних висловів інтегровано у
+методи рядків.</p>
+<h3 id="str.match">str.match</h3>
+<p>Метод <code>str.match(regexp)</code> для рядка <code>str</code>
+повертає збіги з регулярним виразом <code>regexp</code>.</p>
+<p>У нього є три режими роботи:</p>
+<ol type="1">
+<li>Якщо у регулярного виразу є модифікатор <code>g</code>, він повертає
+масив всіх збігів</li>
+<li>Якщо такого модифікатору немає, то повертає лише перший збіг у
+вигляді масиву, в якому за індексом 0 знаходиться збіг, і є властивості
+з додатковою інформацією про нього</li>
+<li>І, нарешті, якщо збігів немає, то, незалежно від наявності
+<code>g</code>, повертається <code>null</code>.</li>
+</ol>
+<p>Це важливий аспект. За відсутності збігів повертається не порожній
+масив, а саме <code>null</code>. Якщо про це забути, можна легко
+припуститися помилки, наприклад:</p>
+<div class="sourceCode" id="cb5"><pre
+class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span> matches <span class="op">=</span> <span class="st">&quot;JavaScript&quot;</span><span class="op">.</span><span class="fu">match</span>(<span class="ss">/HTML/</span>)<span class="op">;</span> <span class="co">// = null</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="op">!</span>matches<span class="op">.</span><span class="at">length</span>) {</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Помилка: у null немає властивості length</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="bu">console</span><span class="op">.</span><span class="fu">log</span>(<span class="st">&quot;Помилка у рядку вище&quot;</span>)<span class="op">;</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p>Якщо хочеться, щоб результатом завжди був масив, можна написати
+так:</p>
+<pre><code class=language-js>let matches = "JavaScript".match(/HTML/) || [];
+
+if (!matches.length) {
+console.log("Збігів немає"); // тепер працює
+}
+</code></pre>
+<h3 id="str.matchall">str.matchAll</h3>
+<p>Метод <code>str.matchAll(regexp)</code> - "новий, покращений" варіант
+методу <code>str.match</code>.</p>
+<p>Він використовується, в першу чергу, для пошуку всіх збігів разом із
+групами скобок.</p>
+<p>Важливо знати:</p>
+<p>Ця можливість була додана в мову нещодавно. У старих браузерах може
+знадобитися поліфіл.</p>
+<p>У нього 3 відмінності від <code>match</code>:</p>
+<ul>
+<li>Він повертає не масив, а об'єкт, що перебирається з результатами,
+звичайний масив можна зробити за допомогою <code>Array.from</code>.</li>
+<li>Кожен збіг повертається у вигляді масиву зі скобочними групами (як
+<code>str.match</code> без <code>g</code>).</li>
+<li>Якщо збігів немає, то повертається не <code>null</code>, а порожній
+об'єкт, що перебирається.</li>
+</ul>
+<p><strong>Приклад</strong></p>
+<pre><code class=language-js>let str = "{Hello}, {world}!";
+let regexp = /{(.*?)}/g;
+let matchAll = str.matchAll(regexp);
+
+console.log(matchAll);
+// [object RegExp String Iterator], не масив, а об'єкт, що перебирається
+
+matchAll = Array.from(matchAll); // тепер масив
+
+let firstMatch = matchAll[0];
+console.log(firstMatch[0]); // {Hello}
+console.log(firstMatch[1]); // Hello
+console.log(firstMatch.index); // 0
+console.log(firstMatch.input); // {Hello}, {world}!
+</code></pre>
+<p>При переборі результатів <code>matchAll</code> у циклі
+<code>for..of</code> виклик <code>Array.from</code>, зрозуміло, не
+потрібен.</p>
+<h3 id="str.search">str.search</h3>
+<p>Метод <code>str.search(regexp)</code> повертає позицію першого збігу
+з <code>regexp</code> у рядку <code>str</code> або -1, якщо збігу
+немає.</p>
+<p><strong>Приклад</strong></p>
+<pre><code class=language-js>let str = "I love JavaScript!";
+let regexp = /Java.+/;
+
+console.log(str.search(regexp)); // 7
+</code></pre>
+<p>Важливе обмеження: <code>str.search</code> вміє повертати лише
+позицію першого збігу. Всі входження можна знайти, наприклад, за
+допомогою <code>str.matchAll(regexp)</code>.</p>
+<h3 id="str.replace">str.replace</h3>
+<p>Метод <code>str.replace(regexp, replacement)</code> замінює збіги з
+<code>regexp</code> у рядку <code>str</code> на <code>replacement</code>
+(всі, якщо є модифікатор <code>g</code>, інакше тільки перше).</p>
+<p><strong>Приклад</strong></p>
+<pre><code class=language-js>console.log("We will, we will".replace(/we/i, "I")); // I will, we will
+console.log("We will, we will".replace(/we/gi, "I")); // I will, I will
+</code></pre>
+<p>У рядку заміни <code>replacement</code> ми можемо використовувати
+спеціальні комбінації символів для вставки фрагментів збігу:</p>
+<table>
+<thead>
+<tr>
+<th>Спецсимволи</th>
+<th>Дія у рядку заміни</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>$&amp;</code></td>
+<td>вставляє весь знайдений збіг</td>
+</tr>
+<tr>
+<td><code>$`</code></td>
+<td>вставляє частину рядка до збігу</td>
+</tr>
+<tr>
+<td><code>$'</code></td>
+<td>вставляє частину рядка після збігу</td>
+</tr>
+<tr>
+<td><code>$n</code></td>
+<td>вставляє вміст n-ї групи регулярного виразу</td>
+</tr>
+<tr>
+<td><code>$&lt;name&gt;</code></td>
+<td>вставляє вміст групи з ім'ям <code>name</code></td>
+</tr>
+<tr>
+<td><code>$$</code></td>
+<td>вставляє символ "$"</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Приклад</strong></p>
+<pre><code class=language-js>console.log("I love HTML".replace(/HTML/, "$& и JavaScript"));
+// I love HTML и JavaScript
+</code></pre>
+<p>Для ситуацій, які вимагають «розумних» замін, другим аргументом може
+бути функція. Вона буде викликатись для кожного збігу, і її результат
+буде вставлений як заміна.</p>
+<h2 id="методи-regexp">Методи RegExp</h2>
+<h3 id="regexp.test">regexp.test</h3>
+<p>Метод <code>regexp.test(str)</code> перевіряє, чи є хоч один збіг,
+якщо так, то повертає <code>true</code>, інакше <code>false</code>.</p>
+<pre><code class=language-js>let str = "I LoVe JavaScript";
+let regexp = /love/i;
+
+console.log(regexp.test(str)); // true
+</code></pre>
+<p>Вам не обов'язково спочатку поміщати регулярний вираз у змінну:</p>
+<pre><code class=language-js>console.log(/love/i.test("I LoVe JavaScript")); // true
+</code></pre>
+<h3 id="regexp.exec">regexp.exec</h3>
+<p>Метод <code>regexp.exec(str)</code> шукає збіг з <code>regexp</code>
+у рядку <code>str</code>.</p>
+<p>Метод <code>exec</code> поводиться по-різному залежно від цього, чи
+має регулярне вираз модифікатор <code>g</code>.</p>
+<ul>
+<li>Якщо немає <code>g</code>, то <code>regexp.exec(str)</code> повертає
+перший збіг точно як <code>str.match(regexp)</code>. Така поведінка не
+дає нам нічого нового.</li>
+<li>Якщо є <code>g</code>, то:
+<ul>
+<li>Виклик <code>regexp.exec(str)</code> повертає перший збіг і
+запам'ятовує позицію після нього як <code>regexp.lastIndex</code>.</li>
+<li>Наступний такий виклик починає пошук з позиції
+<code>regexp.lastIndex</code>, повертає наступний збіг і запам'ятовує
+позицію після нього в <code>regexp.lastIndex</code>.</li>
+<li>І так далі</li>
+<li>Якщо збігів більше немає, то <code>regexp.exec</code> повертає
+<code>null</code>, а для <code>regexp.lastIndex</code> встановлюється
+значення 0.</li>
+</ul></li>
+</ul>
+<p>До появи методу <code>str.matchAll</code> у JavaScript, виклик
+<code>regexp.exec</code> використовували для отримання всіх збігів з
+їхніми позиціями та групами дужок у циклі.</p>
+<p>Ми можемо використовувати <code>regexp.exec</code> для пошуку збігу,
+починаючи з потрібної позиції, якщо вручну поставимо
+<code>lastIndex</code>.</p>
+<pre><code class=language-js>let str = "Hello, world!";
+
+let regexp = /\w+/g; // без g властивість lastIndex ігнорується
+regexp.lastIndex = 5; // шукаємо з 5-ї позиції (тобто з коми і далі)
+
+console.log(regexp.exec(str)); // world
+</code></pre>
+<h2 id="тестування-регулярних-виразів">Тестування регулярних
+виразів</h2>
+<p>Існує кілька зручних інструментів для тестування та візуалізації
+регулярних виразів.</p>
+<p><a href="https://regexper.com/">Regexper</a> - інструмент з відкритим
+кодом, який працює прямо в браузері без необхідності встановлення. Він
+допомагає зрозуміти, як працює регулярний вираз, перетворюючи його на
+наочну діаграму (Railroad Diagram).</p>
+<p><strong>Приклад</strong></p>
+<p>У Javascript є два види коментарів: <code>//</code> и
+<code>/*...*/</code>. Регулярний вираз для пошуку коментарів можна
+візуалізувати:</p>
+<div class="sourceCode" id="cb6"><pre
+class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ss">/</span><span class="sc">\/\*[\s\S]*?\*\/|\/\/</span><span class="ss">.</span><span class="sc">*</span><span class="ss">/</span></span></code></pre></div>
+<p><img src="regexp-comments.png" width="400" /></p>
+<p>Діаграми корисні для пошуку помилок у своїх регулярних виразах та
+полегшують модифікацію складних виразів, написаних іншими авторами.</p>
+<p><a href="https://regex101.com/">regex101</a> - ще один популярний
+онлайн-сервіс, що допомагає створювати та налагоджувати регулярні
+вирази. Він пропонує покрокове пояснення збігів та підсвічування
+синтаксису, надає довідкові матеріали щодо синтаксису регулярних
+виразів.</p>
+<p>Головна користь цих інструментів - миттєвий зворотний зв'язок. Вони
+підсвічують збіги та пояснюють, чому якісь частини шаблону не
+спрацювали.</p>
+<h2 id="повний-довідник-з-регулярних-виразів">Повний довідник з
+регулярних виразів</h2>
+<p>Повну інформацію можна знайти у нашому Повному довіднику з регулярних
+виразів JavaScript.</p>
+<p>todo: дати посилання</p>
+<h2 id="корисні-практичні-приклади">Корисні практичні приклади</h2>
+<h3 id="замінити-множинні-пробіли-на-один">Замінити множинні пробіли на
+один</h3>
+<pre><code class=language-js>
+const text = "many    spaces    here";
+console.log(text.replace(/\s+/g, " "));
+// результат: "many spaces here"
+</code></pre>
+<h3 id="витяг-певних-даних-із-рядка">Витяг певних даних із рядка</h3>
+<p>Давайте витягнемо всі числа з тексту.</p>
+<pre><code class=language-js>let regex = /\d+/g;
+let res = "Pinocchio had 1 alphabet and 30 soldi".match(regex);
+console.log(res);
+</code></pre>
+<h2 id="faq-за-регулярними-виразами">FAQ за регулярними виразами</h2>
+<h3 id="у-чому-різниця-між-match-та-exec">У чому різниця між match() та
+exec()?</h3>
+<p><code>match()</code> - це метод рядка, <code>exec()</code> - це метод
+регулярного виразу.</p>
+<pre><code class=language-js>
+const text = "test1 test2";
+// match() повертає всі збіги відразу
+console.log(text.match(/test\d/g)); // ['test1', 'test2']
+
+// exec() повертає по одному збігу за виклик
+const regex = /test\d/g;
+console.log(regex.exec(text)); // ['test1']
+console.log(regex.exec(text)); // ['test2']
+</code></pre>
+<p>Який метод обрати?</p>
+<ul>
+<li>Використовуйте <code>match()</code> коли потрібно знайти всі збіги
+одразу (з флагом <code>g</code>)</li>
+<li>Використовуйте <code>exec()</code> коли потрібна детальна інформація
+про збіги або коли потрібно обробляти збіги по одному</li>
+</ul>
+<h3 id="як-зробити-групу-незахоплюючою">Як зробити групу
+незахоплюючою?</h3>
+<p>Використовуйте <code>(?:...)</code></p>
+<pre><code class=language-js>
+const text = "I love Javascript";
+console.log(text.match(/(?:I) (love)/));
+// ['I love', 'love']
+</code></pre>
+<h3 id="як-обробляти-помилки-під-час-роботи-з-регулярними-виразами">Як
+обробляти помилки під час роботи з регулярними виразами?</h3>
+<p>Використовуйте конструкцію <code>try/catch</code></p>
+<div class="sourceCode" id="cb7"><pre
+class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="cf">try</span> {</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> userInput <span class="op">=</span> <span class="st">&quot;* (&quot;</span><span class="op">;</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="kw">new</span> <span class="bu">RegExp</span>(userInput)<span class="op">;</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>} <span class="cf">catch</span> (e) {</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="bu">console</span><span class="op">.</span><span class="fu">log</span>(<span class="st">&quot;Некоректний регулярний вираз&quot;</span>)<span class="op">;</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p>Щоб уникнути синтаксичних помилок, перевіряйте регулярні вирази в
+спеціальних інструментах (онлайнових тестерах, IDE з підсвічуванням
+тощо).</p>
+<h3 id="чому-потрібно-екранувати-спецсимволи">Чому потрібно екранувати
+спецсимволи?</h3>
+<p>Зворотна коса риса використовується для позначення класів символів,
+наприклад <code>\d</code>. Це спеціальний символ у регулярних виразах
+(як і у звичайних рядках).</p>
+<p>Є й інші спеціальні символи, які мають особливе значення у
+регулярному вираженні. Вони використовуються для більш складних
+пошукових конструкцій. Ось перелік цих символів:
+<code>[ ] \ ^ $ . | ? * + ( )</code>.</p>
+<p>Допустимо, ми хочемо знайти буквально крапку. Не «будь-який символ»,
+а саме крапку.</p>
+<p>Щоб використовувати спеціальний символ як звичайний, додайте до нього
+зворотну косу рису: <code>\.</code>.</p>
+<p>Це називається "екранування символу".</p>
+<div class="sourceCode" id="cb8"><pre
+class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> price <span class="op">=</span> <span class="st">&quot;$100.50&quot;</span><span class="op">;</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="co">// Неправильно: const regex = /$/;</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="co">// Правильно:</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> regex <span class="op">=</span> <span class="ss">/</span><span class="sc">\$</span><span class="ss">/</span><span class="op">;</span></span></code></pre></div>
+<p>Круглі дужки також є спеціальними символами, тому якщо нам потрібно
+використовувати саме їх, потрібно вказати <code>\(</code>.</p>
+<p>Символ косої риси <code>/</code>, так званий "слеш", не є спеціальним
+символом, але в JavaScript він використовується для відкриття і закриття
+регулярного виразу: <code>/...шаблон.../</code>, тому ми повинні
+екранувати його.</p>
+<p>Ось як виглядає пошук косої риси:</p>
+<pre><code class=language-js>
+console.log("/".match(/\//)); // '/'
+</code></pre>
+<p>З іншого боку, якщо ми не використовуємо запис <code>/.../</code>, а
+створюємо регулярний вираз, використовуючи <code>new RegExp</code>, тоді
+нам не потрібно екранувати косу рису:</p>
+<pre><code class=language-js>
+console.log("/".match(new RegExp("/"))); // знаходить /
+</code></pre>
+<h3 id="у-чому-відмінність-крапки-від-ss">У чому відмінність крапки від
+\s\S</h3>
+<p>Вираз <code>.*</code> не захоплює перехід на новий рядок, на відміну
+від <code>\s\S</code>.</p>
+<script src=https://flems.io/flems.html id=flems defer></script>
+<script>
+        document.getElementById("flems").onload = function() {
+            ;[].forEach.call(document.querySelectorAll("pre code.language-js"), function(el) {
+                el = el.parentNode
+
+                var div = document.createElement("div")
+                window.Flems(div, {
+                    middle        : 73,
+                    selected      : 'b.js',
+                    editable      : true,
+                    toolbar       : false,
+                    shareButton   : true,
+                    console       : false,
+                    autoHeight    : true,
+                    fileTabs      : false,
+                    files: [{
+                        name: "a.js",
+                        content: `
+                        const output = document.createElement('div');
+document.body.appendChild(output);
+const originalConsoleLog = console.log;
+console.log = function(message) {
+    output.innerHTML += message + '<br>';
+    originalConsoleLog.apply(console, arguments);
+};`},
+                                        {       name: "b.js",
+                        content: el.textContent
+                    }]
+                }, "https://flems.io/flems.html")
+
+                el.parentNode.insertBefore(div, el)
+                el.parentNode.removeChild(el)
+            })
+        }
+</script>
+</body>
+</html>
